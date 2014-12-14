@@ -45,6 +45,23 @@ func (disp Display) Flip() {
 	disp.renderer.Present()
 }
 
+func RunWhileExit() {
+	var event sdl.Event
+	running := true
+
+	for running {
+		for event = sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
+			switch t := event.(type) {
+			case *sdl.QuitEvent:
+				running = false
+			default:
+				_ = t
+				running = true
+			}
+		}
+	}
+}
+
 func Sleep(ms uint32) {
 	sdl.Delay(ms)
 }
