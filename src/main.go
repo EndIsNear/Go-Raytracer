@@ -1,7 +1,7 @@
 package main
 
 import (
-	"Go-Raytracer/sdlwrapper"
+	"Go-Raytracer/src/sdlwrapper"
 )
 
 var winWidth, winHeight int = 800, 600
