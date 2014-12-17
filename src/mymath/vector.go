@@ -9,7 +9,7 @@ type Vector struct {
 	X, Y, Z float64
 }
 
-func (v *Vector) Set(_x, _y, _z int) {
+func (v *Vector) Set(_x, _y, _z float64) {
 	v.X = float64(_x)
 	v.Y = float64(_y)
 	v.Z = float64(_z)
@@ -33,6 +33,11 @@ func (v *Vector) UnaryMinus() {
 	v.X = -v.X
 	v.Y = -v.Y
 	v.Z = -v.Z
+}
+
+func (v *Vector) Normalize() {
+	multiplier := 1 / v.Lenght()
+	v.Multiply(multiplier)
 }
 
 func VectorsAddition(left, right Vector) Vector {
