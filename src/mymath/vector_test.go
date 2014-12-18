@@ -241,21 +241,21 @@ func TestNormalize(t *testing.T) {
 	vec.Set(37, 0, 0)
 	vec2.Set(1, 0, 0)
 	vec.Normalize()
-	if vec.X-vec2.X > 1e-10 || vec.Y-vec2.Y > 1e-10 || vec.Z-vec2.Z > 1e-10 {
+	if math.Abs(vec.X-vec2.X) > 1e-10 || math.Abs(vec.Y-vec2.Y) > 1e-10 || math.Abs(vec.Z-vec2.Z) > 1e-10 {
 		t.Errorf("Vetor.Normalize() failed!")
 	}
 
 	vec.Set(37, 37, 0)
 	vec2.Set(1/math.Sqrt(2), 1/math.Sqrt(2), 0)
 	vec.Normalize()
-	if vec.X-vec2.X > 1e-10 || vec.Y-vec2.Y > 1e-10 || vec.Z-vec2.Z > 1e-10 {
+	if math.Abs(vec.X-vec2.X) > 1e-10 || math.Abs(vec.Y-vec2.Y) > 1e-10 || math.Abs(vec.Z-vec2.Z) > 1e-10 {
 		t.Errorf("Vetor.Normalize() failed!")
 	}
 
 	vec.Set(37, 37, 37)
 	vec2.Set(1/math.Sqrt(3), 1/math.Sqrt(3), 1/math.Sqrt(3))
 	vec.Normalize()
-	if vec.X-vec2.X > 1e-10 || vec.Y-vec2.Y > 1e-10 || vec.Z-vec2.Z > 1e-10 {
+	if math.Abs(vec.X-vec2.X) > 1e-10 || math.Abs(vec.Y-vec2.Y) > 1e-10 || math.Abs(vec.Z-vec2.Z) > 1e-10 {
 		t.Errorf("Vetor.Normalize() failed!")
 	}
 
