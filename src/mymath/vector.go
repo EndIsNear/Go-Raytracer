@@ -9,6 +9,10 @@ type Vector struct {
 	X, Y, Z float64
 }
 
+func NewVector(x, y, z float64) Vector {
+	return Vector{x, y, z}
+}
+
 func (v *Vector) Set(_x, _y, _z float64) {
 	v.X = float64(_x)
 	v.Y = float64(_y)

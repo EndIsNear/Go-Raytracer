@@ -5,6 +5,14 @@ import (
 	"testing"
 )
 
+func TestNewVector(t *testing.T) {
+	vec := NewVector(1, 0, 0)
+
+	if vec.X != 1 || vec.Y != 0 || vec.Z != 0 {
+		t.Errorf("NewVector failed!")
+	}
+}
+
 func TestVectorsAddition(t *testing.T) {
 	var vec, vec2, resVec, neededVec Vector
 
