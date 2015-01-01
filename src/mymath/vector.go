@@ -9,6 +9,10 @@ type Vector struct {
 	X, Y, Z float64
 }
 
+type Ray struct {
+	start, dir Vector
+}
+
 func NewVector(x, y, z float64) Vector {
 	return Vector{x, y, z}
 }
