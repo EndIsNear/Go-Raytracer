@@ -55,8 +55,6 @@ func RotationAroundX(angle float64) Matrix {
 	res[1][2] = -sin
 	res[2][2] = cos
 
-	// fmt.Println(sin, cos, angle)
-	// fmt.Printf("%f %f %f %f %f %f %f %f %f", res[0][0], res[0][1], res[0][2], res[1][0], res[1][1], res[1][2], res[2][0], res[2][1], res[2][2])
 	return res
 }
 

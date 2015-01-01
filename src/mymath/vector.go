@@ -1,7 +1,6 @@
 package mymath
 
 import (
-	// "fmt"
 	"math"
 )
 
@@ -10,7 +9,7 @@ type Vector struct {
 }
 
 type Ray struct {
-	start, dir Vector
+	Start, Dir Vector
 }
 
 func NewVector(x, y, z float64) Vector {
