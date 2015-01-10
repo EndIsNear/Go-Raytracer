@@ -34,6 +34,7 @@ func NewCamera(start mymath.Vector, yaw, pitch, roll, fov, aspect float64) *Came
 	rotAroundX := mymath.RotationAroundX(mymath.DegToRad * roll)
 	rotAroundY := mymath.RotationAroundY(mymath.DegToRad * pitch)
 	rotAroundZ := mymath.RotationAroundZ(mymath.DegToRad * yaw)
+
 	rotation := mymath.MatrixMultiplication((mymath.MatrixMultiplication(rotAroundX, rotAroundY)), rotAroundZ)
 
 	tmp.upLeft = mymath.MultiplyVectMatr(tmp.upLeft, rotation)
@@ -47,16 +48,18 @@ func NewCamera(start mymath.Vector, yaw, pitch, roll, fov, aspect float64) *Came
 	return &tmp
 }
 
-func (c *Camera) GetRayAt(x, y uint16) mymath.Ray {
+func (c *Camera) GetRayAt(x, y, scrWidth, scrHeight uint16) mymath.Ray {
 	dir := c.upLeft
 
 	width := mymath.VectorsSubstraction(c.upRight, c.upLeft)
-	width.Multiply(float64(x) / 640.0)
+	width.Multiply(float64(x) / float64(scrWidth))
 	height := mymath.VectorsSubstraction(c.downLeft, c.upLeft)
-	height.Multiply(float64(y) / 640.0)
+	height.Multiply(float64(y) / float64(scrHeight))
 
 	dir.Add(width)
 	dir.Add(height)
+
+	dir = mymath.VectorsSubstraction(dir, c.start)
 	dir.Normalize()
 
 	return mymath.Ray{c.start, dir}

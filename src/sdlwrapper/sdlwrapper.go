@@ -31,7 +31,7 @@ func NewDisplay(width, height int) (*Display, error) {
 
 func (disp *Display) DrawPixel(x, y int, col *utils.Color) {
 	r, g, b := col.ToRGB()
-	disp.renderer.SetDrawColor(r, g, b, 0)
+	disp.renderer.SetDrawColor(r, g, b, 255)
 	disp.renderer.DrawPoint(x, y)
 }
 
