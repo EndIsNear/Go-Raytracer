@@ -1,6 +1,7 @@
 package sdlwrapper
 
 import (
+	"Go-Raytracer/src/utils"
 	"errors"
 	"github.com/veandco/go-sdl2/sdl"
 )
@@ -28,20 +29,18 @@ func NewDisplay(width, height int) (*Display, error) {
 	return &disp, nil
 }
 
-func (disp Display) SetDrawColor(r, g, b, a uint8) {
-	disp.renderer.SetDrawColor(r, g, b, a)
-}
-
-func (disp Display) DrawPoint(x, y int) {
+func (disp *Display) DrawPixel(x, y int, col *utils.Color) {
+	r, g, b := col.ToRGB()
+	disp.renderer.SetDrawColor(r, g, b, 0)
 	disp.renderer.DrawPoint(x, y)
 }
 
-func (disp Display) Destroy() {
+func (disp *Display) Destroy() {
 	disp.renderer.Destroy()
 	disp.window.Destroy()
 }
 
-func (disp Display) Flip() {
+func (disp *Display) Flip() {
 	disp.renderer.Present()
 }
 
@@ -62,6 +61,6 @@ func RunWhileExit() {
 	}
 }
 
-func Sleep(ms uint32) {
-	sdl.Delay(ms)
-}
+// func Sleep(ms uint32) {
+// 	sdl.Delay(ms)
+// }

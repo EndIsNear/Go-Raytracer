@@ -2,6 +2,7 @@ package main
 
 import (
 	"Go-Raytracer/src/sdlwrapper"
+	"Go-Raytracer/src/utils"
 )
 
 var winWidth, winHeight int = 800, 600
@@ -9,11 +10,11 @@ var winWidth, winHeight int = 800, 600
 func main() {
 	disp, _ := sdlwrapper.NewDisplay(winWidth, winHeight)
 
-	disp.SetDrawColor(255, 0, 0, 0)
+	col := utils.Color{255, 0, 0}
 
 	for i := 0; i < 50; i++ {
 		for j := 0; j < 50; j++ {
-			disp.DrawPoint(i, j)
+			disp.DrawPixel(i, j, &col)
 		}
 	}
 

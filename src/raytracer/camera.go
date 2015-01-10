@@ -9,7 +9,7 @@ type Camera struct {
 	upLeft, upRight, downLeft, start mymath.Vector
 }
 
-func InitializeCamera(start mymath.Vector, yaw, pitch, roll, fov, aspect float64) *Camera {
+func NewCamera(start mymath.Vector, yaw, pitch, roll, fov, aspect float64) *Camera {
 	var tmp Camera
 	tmp.start = start
 	var x, y, lenXY, wantedLen, scaling float64
