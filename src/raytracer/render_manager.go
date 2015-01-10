@@ -73,7 +73,7 @@ func (rm *RenderManager) raytrace(x, y uint16) {
 		}
 	}
 
-	if data.dist != 1e99 {
+	if data.dist < 1e99 {
 		rm.dispBuffer[x][y] = (*resNode.shader).GetColor(&data, &rm.scene.Lights)
 	} else {
 		rm.dispBuffer[x][y] = utils.NewColor(0, 0, 0)
