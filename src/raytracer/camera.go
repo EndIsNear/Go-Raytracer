@@ -31,9 +31,9 @@ func NewCamera(start mymath.Vector, yaw, pitch, roll, fov, aspect float64) *Came
 	tmp.upRight = mymath.Vector{-x, y, 1}
 	tmp.downLeft = mymath.Vector{x, -y, 1}
 
-	rotAroundX := mymath.RotationAroundX(mymath.DegToRad * roll)
-	rotAroundY := mymath.RotationAroundY(mymath.DegToRad * pitch)
-	rotAroundZ := mymath.RotationAroundZ(mymath.DegToRad * yaw)
+	rotAroundX := mymath.RotationAroundX(mymath.DegToRad * pitch)
+	rotAroundY := mymath.RotationAroundY(mymath.DegToRad * yaw)
+	rotAroundZ := mymath.RotationAroundZ(mymath.DegToRad * roll)
 
 	rotation := mymath.MatrixMultiplication((mymath.MatrixMultiplication(rotAroundX, rotAroundY)), rotAroundZ)
 
