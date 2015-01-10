@@ -1,26 +1,18 @@
 package main
 
 import (
-	"Go-Raytracer/src/sdlwrapper"
-	"Go-Raytracer/src/utils"
+	"Go-Raytracer/src/raytracer"
 )
 
-var winWidth, winHeight int = 800, 600
+var winWidth, winHeight uint16 = 800, 600
 
 func main() {
-	disp, _ := sdlwrapper.NewDisplay(winWidth, winHeight)
-
-	col := utils.Color{255, 0, 0}
-
-	for i := 0; i < 50; i++ {
-		for j := 0; j < 50; j++ {
-			disp.DrawPixel(i, j, &col)
-		}
+	ok, render := raytracer.NewRenderManager(winWidth, winHeight)
+	if !ok {
+		return
 	}
-
-	disp.Flip()
-
-	sdlwrapper.RunWhileExit()
-
-	disp.Destroy()
+	render.InitScene()
+	render.StartRendering()
+	render.Display()
+	render.Destroy()
 }
