@@ -4,6 +4,11 @@ import (
 	"Go-Raytracer/src/mymath"
 	"Go-Raytracer/src/sdlwrapper"
 	"Go-Raytracer/src/utils"
+	"time"
+)
+
+const (
+	WindowName = "GO raytracer."
 )
 
 type RenderManager struct {
@@ -12,6 +17,7 @@ type RenderManager struct {
 	scene         *Scene
 	camera        *Camera
 	width, height uint16
+	renderTime    time.Duration
 }
 
 func NewRenderManager(width, height uint16) (bool, *RenderManager) {
@@ -20,7 +26,7 @@ func NewRenderManager(width, height uint16) (bool, *RenderManager) {
 	res.width = width
 	res.height = height
 
-	res.display, err = sdlwrapper.NewDisplay(int(width), int(height))
+	res.display, err = sdlwrapper.NewDisplay(int(width), int(height), WindowName)
 	if err != nil {
 		return false, nil
 	}
@@ -58,11 +64,13 @@ func (rm *RenderManager) InitScene() {
 }
 
 func (rm *RenderManager) StartRendering() {
+	startTime := time.Now()
 	for i := uint16(0); i < rm.width; i++ {
 		for j := uint16(0); j < rm.height; j++ {
 			rm.raytrace(i, j)
 		}
 	}
+	rm.renderTime = time.Now().Sub(startTime)
 }
 
 func (rm *RenderManager) raytrace(x, y uint16) {
@@ -98,6 +106,7 @@ func (rm *RenderManager) Display() {
 			rm.display.DrawPixel(i, j, &rm.dispBuffer[i][j])
 		}
 	}
+	rm.display.SetTitle(WindowName + " [Render time:" + rm.renderTime.String() + "]")
 	rm.display.Flip()
 	sdlwrapper.RunWhileExit()
 }

@@ -11,10 +11,10 @@ type Display struct {
 	renderer *sdl.Renderer
 }
 
-func NewDisplay(width, height int) (*Display, error) {
+func NewDisplay(width, height int, name string) (*Display, error) {
 	var err error
 	var disp Display
-	disp.window, err = sdl.CreateWindow("My GO tracer", sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED, width, height, sdl.WINDOW_SHOWN)
+	disp.window, err = sdl.CreateWindow(name, sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED, width, height, sdl.WINDOW_SHOWN)
 	if err != nil {
 		return nil, errors.New("Can not create window.")
 	}
@@ -42,6 +42,10 @@ func (disp *Display) Destroy() {
 
 func (disp *Display) Flip() {
 	disp.renderer.Present()
+}
+
+func (disp *Display) SetTitle(newTitle string) {
+	disp.window.SetTitle(newTitle)
 }
 
 func RunWhileExit() {
