@@ -1,6 +1,7 @@
 package raytracer
 
 import (
+	"Go-Raytracer/src/mymath"
 	"Go-Raytracer/src/utils"
 	"testing"
 )
@@ -36,11 +37,11 @@ func TestAddLight(t *testing.T) {
 
 func TestAddGeometry(t *testing.T) {
 	test := NewScene()
-	pl := Plane{2}
+	pl := Plane{XZ, mymath.Vector{1, 0, 0}, 2}
 	test.AddGeometry(&pl, "test")
-	pl = Plane{3}
+	pl = Plane{XY, mymath.Vector{0, 2, 0}, 3}
 	test.AddGeometry(&pl, "test1")
-	pl = Plane{4}
+	pl = Plane{YZ, mymath.Vector{0, 0, 3}, 5}
 	test.AddGeometry(&pl, "test2")
 	if _, ok := test.Geometries["test"]; !ok {
 		t.Errorf("AddGeometry failed!")
@@ -74,7 +75,7 @@ func TestAddShader(t *testing.T) {
 
 func TestAddSceneElement(t *testing.T) {
 	test := NewScene()
-	pl := Plane{2}
+	pl := Plane{XZ, mymath.Vector{0, 0, 0}, 2}
 	test.AddGeometry(&pl, "geometry")
 	ch := Checker{utils.NewColor(0, 0, 0), utils.NewColor(0, 0, 0), 20}
 	test.AddShader(&ch, "shader")
