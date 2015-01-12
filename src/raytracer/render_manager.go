@@ -2,7 +2,6 @@ package raytracer
 
 import (
 	"Go-Raytracer/src/mymath"
-	"Go-Raytracer/src/sdlwrapper"
 	"Go-Raytracer/src/utils"
 	"time"
 )
@@ -12,24 +11,19 @@ const (
 )
 
 type RenderManager struct {
-	display       *sdlwrapper.Display
 	dispBuffer    [][]utils.Color
 	scene         *Scene
 	camera        *Camera
 	width, height uint16
-	renderTime    time.Duration
+	workersCnt    uint16
+	startTime     time.Time
 }
 
-func NewRenderManager(width, height uint16) (bool, *RenderManager) {
-	var err error
+func NewRenderManager(width, height, workersCnt uint16) *RenderManager {
 	var res RenderManager
 	res.width = width
 	res.height = height
-
-	res.display, err = sdlwrapper.NewDisplay(int(width), int(height), WindowName)
-	if err != nil {
-		return false, nil
-	}
+	res.workersCnt = workersCnt
 
 	res.scene = NewScene()
 	res.dispBuffer = make([][]utils.Color, width)
@@ -37,11 +31,14 @@ func NewRenderManager(width, height uint16) (bool, *RenderManager) {
 		res.dispBuffer[i] = make([]utils.Color, height)
 	}
 
-	return true, &res
+	return &res
 }
 
+// func (rm *RenderManager) InitScene(sceneFileName string) {
 func (rm *RenderManager) InitScene() {
+
 	//hardcoded for now
+	//should be read from file
 	rm.camera = NewCamera(mymath.Vector{0, 150, 0}, 0, -10, 0, 90, float64(rm.width)/float64(rm.height))
 
 	pl := Plane{XZ, mymath.Vector{0, 0, 400}, 200}
@@ -63,14 +60,29 @@ func (rm *RenderManager) InitScene() {
 	rm.scene.AddSceneElement("plane3", "checker3")
 }
 
+func (rm *RenderManager) GetPixel(x, y uint16) *utils.Color {
+	return &rm.dispBuffer[x][y]
+}
+
+func (rm *RenderManager) GetRenderTime() time.Duration {
+	return time.Now().Sub(rm.startTime)
+}
+
 func (rm *RenderManager) StartRendering() {
-	startTime := time.Now()
+	go rm.rendering()
+}
+
+func (rm *RenderManager) StopRendering() {
+
+}
+
+func (rm *RenderManager) rendering() {
+	rm.startTime = time.Now()
 	for i := uint16(0); i < rm.width; i++ {
 		for j := uint16(0); j < rm.height; j++ {
 			rm.raytrace(i, j)
 		}
 	}
-	rm.renderTime = time.Now().Sub(startTime)
 }
 
 func (rm *RenderManager) raytrace(x, y uint16) {
@@ -85,7 +97,7 @@ func (rm *RenderManager) raytrace(x, y uint16) {
 	data.dist = 1e99
 	ray = rm.camera.GetRayAt(x, y, rm.width, rm.height)
 
-	for _, val := range rm.scene.Elements {
+	for _, val := range rm.scene.elements {
 		ok, tmp = (*val.geometry).Intersect(&ray, data.dist)
 		if ok {
 			data = *tmp
@@ -94,23 +106,8 @@ func (rm *RenderManager) raytrace(x, y uint16) {
 	}
 
 	if data.dist < 1e99 {
-		rm.dispBuffer[x][y] = (*resNode.shader).GetColor(&data, &rm.scene.Lights)
+		rm.dispBuffer[x][y] = (*resNode.shader).GetColor(&data, &rm.scene.lights)
 	} else {
 		rm.dispBuffer[x][y] = utils.NewColor(0, 0, 0)
 	}
-}
-
-func (rm *RenderManager) Display() {
-	for i := 0; i < int(rm.width); i++ {
-		for j := 0; j < int(rm.height); j++ {
-			rm.display.DrawPixel(i, j, &rm.dispBuffer[i][j])
-		}
-	}
-	rm.display.SetTitle(WindowName + " [Render time:" + rm.renderTime.String() + "]")
-	rm.display.Flip()
-	sdlwrapper.RunWhileExit()
-}
-
-func (rm *RenderManager) Destroy() {
-	rm.display.Destroy()
 }

@@ -15,46 +15,46 @@ type Light struct {
 }
 
 type Scene struct {
-	Geometries map[string]*Geometry
-	Shaders    map[string]*Shader
-	Elements   []*SceneElement
-	Lights     []Light
+	geometries map[string]*Geometry
+	shaders    map[string]*Shader
+	elements   []*SceneElement
+	lights     []Light
 	//background color
 }
 
 func NewScene() *Scene {
 	var tmp Scene
-	tmp.Geometries = make(map[string]*Geometry)
-	tmp.Shaders = make(map[string]*Shader)
-	tmp.Elements = make([]*SceneElement, 0)
-	tmp.Lights = make([]Light, 0)
+	tmp.geometries = make(map[string]*Geometry)
+	tmp.shaders = make(map[string]*Shader)
+	tmp.elements = make([]*SceneElement, 0)
+	tmp.lights = make([]Light, 0)
 	return &tmp
 }
 
 func (s *Scene) AddLight(lightCol utils.Color, lightPower float64) {
-	s.Lights = append(s.Lights, Light{&lightCol, lightPower})
+	s.lights = append(s.lights, Light{&lightCol, lightPower})
 }
 
 func (s *Scene) AddGeometry(geometry Geometry, geometryName string) {
-	s.Geometries[geometryName] = &geometry
+	s.geometries[geometryName] = &geometry
 }
 
 func (s *Scene) AddShader(shader Shader, shaderName string) {
-	s.Shaders[shaderName] = &shader
+	s.shaders[shaderName] = &shader
 }
 
 func (s *Scene) AddSceneElement(geometryName, shaderName string) bool {
 	var sceneElem SceneElement
 	var ok bool
-	sceneElem.geometry, ok = s.Geometries[geometryName]
+	sceneElem.geometry, ok = s.geometries[geometryName]
 	if !ok {
 		return false
 	}
-	sceneElem.shader, ok = s.Shaders[shaderName]
+	sceneElem.shader, ok = s.shaders[shaderName]
 	if !ok {
 		return false
 	}
-	s.Elements = append(s.Elements, &sceneElem)
+	s.elements = append(s.elements, &sceneElem)
 
 	return true
 }

@@ -19,18 +19,18 @@ func TestAddLight(t *testing.T) {
 	test.AddLight(utils.NewColor(100, 100, 100), 100)
 	test.AddLight(utils.NewColor(5, 5, 5), 1)
 
-	r, g, b := test.Lights[0].color.ToRGB()
-	if r != 255 || g != 255 || b != 255 || test.Lights[0].power != 10000.0 {
+	r, g, b := test.lights[0].color.ToRGB()
+	if r != 255 || g != 255 || b != 255 || test.lights[0].power != 10000.0 {
 		t.Errorf("AddLight failed!")
 	}
 
-	r, g, b = test.Lights[1].color.ToRGB()
-	if r != 100 || g != 100 || b != 100 || test.Lights[1].power != 100.0 {
+	r, g, b = test.lights[1].color.ToRGB()
+	if r != 100 || g != 100 || b != 100 || test.lights[1].power != 100.0 {
 		t.Errorf("AddLight failed!")
 	}
 
-	r, g, b = test.Lights[2].color.ToRGB()
-	if r != 5 || g != 5 || b != 5 || test.Lights[2].power != 1.0 {
+	r, g, b = test.lights[2].color.ToRGB()
+	if r != 5 || g != 5 || b != 5 || test.lights[2].power != 1.0 {
 		t.Errorf("AddLight failed!")
 	}
 }
@@ -43,13 +43,13 @@ func TestAddGeometry(t *testing.T) {
 	test.AddGeometry(&pl, "test1")
 	pl = Plane{YZ, mymath.Vector{0, 0, 3}, 5}
 	test.AddGeometry(&pl, "test2")
-	if _, ok := test.Geometries["test"]; !ok {
+	if _, ok := test.geometries["test"]; !ok {
 		t.Errorf("AddGeometry failed!")
 	}
-	if _, ok := test.Geometries["test1"]; !ok {
+	if _, ok := test.geometries["test1"]; !ok {
 		t.Errorf("AddGeometry failed!")
 	}
-	if _, ok := test.Geometries["test2"]; !ok {
+	if _, ok := test.geometries["test2"]; !ok {
 		t.Errorf("AddGeometry failed!")
 	}
 }
@@ -62,13 +62,13 @@ func TestAddShader(t *testing.T) {
 	test.AddShader(&ch, "test1")
 	ch = Checker{utils.NewColor(0, 0, 0), utils.NewColor(0, 0, 0), 30}
 	test.AddShader(&ch, "test2")
-	if _, ok := test.Shaders["test"]; !ok {
+	if _, ok := test.shaders["test"]; !ok {
 		t.Errorf("AddShader failed!")
 	}
-	if _, ok := test.Shaders["test1"]; !ok {
+	if _, ok := test.shaders["test1"]; !ok {
 		t.Errorf("AddShader failed!")
 	}
-	if _, ok := test.Shaders["test2"]; !ok {
+	if _, ok := test.shaders["test2"]; !ok {
 		t.Errorf("AddShader failed!")
 	}
 }
