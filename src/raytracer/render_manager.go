@@ -10,6 +10,14 @@ const (
 	WindowName = "GO raytracer."
 )
 
+//render states
+const (
+	NOT_INITIALIZED = iota
+	RENDERING
+	STOPED
+	FINISHED
+)
+
 type RenderManager struct {
 	dispBuffer    [][]utils.Color
 	scene         *Scene
@@ -17,6 +25,7 @@ type RenderManager struct {
 	width, height uint16
 	workersCnt    uint16
 	startTime     time.Time
+	state         uint16
 }
 
 func NewRenderManager(width, height, workersCnt uint16) *RenderManager {
@@ -24,6 +33,7 @@ func NewRenderManager(width, height, workersCnt uint16) *RenderManager {
 	res.width = width
 	res.height = height
 	res.workersCnt = workersCnt
+	res.state = NOT_INITIALIZED
 
 	res.scene = NewScene()
 	res.dispBuffer = make([][]utils.Color, width)
@@ -34,9 +44,7 @@ func NewRenderManager(width, height, workersCnt uint16) *RenderManager {
 	return &res
 }
 
-// func (rm *RenderManager) InitScene(sceneFileName string) {
-func (rm *RenderManager) InitScene() {
-
+func (rm *RenderManager) InitScene(sceneFileName string) {
 	//hardcoded for now
 	//should be read from file
 	rm.camera = NewCamera(mymath.Vector{0, 150, 0}, 0, -10, 0, 90, float64(rm.width)/float64(rm.height))
@@ -58,6 +66,7 @@ func (rm *RenderManager) InitScene() {
 	rm.scene.AddSceneElement("plane", "checker")
 	rm.scene.AddSceneElement("plane2", "checker2")
 	rm.scene.AddSceneElement("plane3", "checker3")
+	rm.state = STOPED
 }
 
 func (rm *RenderManager) GetPixel(x, y uint16) *utils.Color {
@@ -68,12 +77,25 @@ func (rm *RenderManager) GetRenderTime() time.Duration {
 	return time.Now().Sub(rm.startTime)
 }
 
+func (rm *RenderManager) GetWidth() uint16 {
+	return rm.height
+}
+
+func (rm *RenderManager) GetHeight() uint16 {
+	return rm.height
+}
+
 func (rm *RenderManager) StartRendering() {
+	rm.state = RENDERING
 	go rm.rendering()
 }
 
 func (rm *RenderManager) StopRendering() {
+	rm.state = STOPED
+}
 
+func (rm *RenderManager) GetState() uint16 {
+	return rm.state
 }
 
 func (rm *RenderManager) rendering() {
@@ -83,6 +105,7 @@ func (rm *RenderManager) rendering() {
 			rm.raytrace(i, j)
 		}
 	}
+	rm.state = FINISHED
 }
 
 func (rm *RenderManager) raytrace(x, y uint16) {
