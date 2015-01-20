@@ -48,23 +48,16 @@ func (disp *Display) SetTitle(newTitle string) {
 	disp.window.SetTitle(newTitle)
 }
 
-func RunWhileExit() {
+func CheckForExitEvent() bool {
 	var event sdl.Event
-	running := true
-
-	for running {
-		for event = sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
-			switch t := event.(type) {
-			case *sdl.QuitEvent:
-				running = false
-			default:
-				_ = t
-				running = true
-			}
+	for event = sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
+		switch t := event.(type) {
+		case *sdl.QuitEvent:
+			return true
+		default:
+			_ = t
+			return false
 		}
 	}
+	return false
 }
-
-// func Sleep(ms uint32) {
-// 	sdl.Delay(ms)
-// }
