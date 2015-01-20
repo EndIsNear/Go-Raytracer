@@ -2,8 +2,10 @@ package main
 
 import (
 	"Go-Raytracer/src/raytracer"
+	"Go-Raytracer/src/sdlwrapper"
 	"fmt"
 	"os"
+	"runtime"
 )
 
 const (
@@ -13,10 +15,13 @@ const (
 -o "filepath" save image to filepath`
 	tooFewArg                  = `Too few arguments.`
 	errParseArg                = `Can't parse args.`
+	errCreateDisp              = `Can't initialize window.`
+	windowName                 = `GoTracer`
 	winWidth, winHeight uint16 = 800, 600
 )
 
 func main() {
+	runtime.GOMAXPROCS(runtime.NumCPU())
 	sceneFilepath := ""
 	outputFilepath := ""
 	displayRendering := false
@@ -49,13 +54,37 @@ func main() {
 	render.StartRendering()
 
 	if displayRendering {
-		for render.GetState() == raytracer.RENDERING {
-			//display progress
+		disp, err := sdlwrapper.NewDisplay(int(winWidth), int(winHeight), windowName)
+		if err != nil {
+			fmt.Println(errCreateDisp)
+			return
 		}
+		defer disp.Destroy()
+
+		//refreshes display while rendering
+		for !sdlwrapper.CheckForExitEvent() && render.GetState() == raytracer.RENDERING {
+			RefreshDisplay(render, disp)
+		}
+
+		//update window title with render time
+		disp.SetTitle(windowName + " [render time:" + render.GetRenderTime().String() + "]")
 	}
 
 	if saveImage {
 		//save the result
 		outputFilepath = outputFilepath
 	}
+
+	//loop while user close it
+	for !sdlwrapper.CheckForExitEvent() {
+	}
+}
+
+func RefreshDisplay(render *raytracer.RenderManager, disp *sdlwrapper.Display) {
+	for i := uint16(0); i < winWidth; i++ {
+		for j := uint16(0); j < winHeight; j++ {
+			disp.DrawPixel(int(i), int(j), render.GetPixel(i, j))
+		}
+	}
+	disp.Flip()
 }
