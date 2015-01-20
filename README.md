@@ -9,5 +9,10 @@ Install and Run
 Make sure you have [Go](http://golang.org/doc/install) and [veandco/go-sdl2](https://github.com/veandco/go-sdl2) installed.
 
 	git clone https://github.com/EndIsNear/Go-Raytracer.git
-	cd /src
+	cd src/
 	go run main.go
+
+Features
+========
+- Intersection with planes, cubes, spheres and meshes.
+- Shading with lambert, phong and textures.
