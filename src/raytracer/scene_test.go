@@ -39,8 +39,9 @@ func TestAddSceneElement(t *testing.T) {
 	test := NewScene()
 	pl := Plane{XZ, mymath.Vector{0, 0, 0}, 2}
 	ch := Checker{utils.NewColor(0, 0, 0), utils.NewColor(0, 0, 0), 20}
+	lm := Lambert{&ch}
 
-	if ok := test.AddSceneElement(&pl, &ch); !ok {
+	if ok := test.AddSceneElement(&pl, &lm); !ok {
 		t.Errorf("AddSceneElement failed!")
 	}
 }
