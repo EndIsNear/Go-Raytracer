@@ -88,10 +88,41 @@ func (p *Plane) Intersect(ray *mymath.Ray, crnDist float64) (bool, *Intersection
 }
 
 type Sphere struct {
+	center mymath.Vector
+	radius float64
 }
 
 func (s *Sphere) Intersect(ray *mymath.Ray, crnDist float64) (bool, *IntersectionData) {
-	return false, nil
+	// x1 = (-B + sqrt(Dscr)) / (2*A);
+	// x2 = (-B - sqrt(Dscr)) / (2*A);
+	// double sol = x2; // get the closer of the two solutions...
+	H := mymath.VectorsSubstraction(ray.Start, s.center)
+	A := ray.Dir.LenghtSqr()
+	B := 2 * mymath.VectorsDotProduct(H, ray.Dir)
+	C := H.LenghtSqr() - s.radius*s.radius
+	dscr := B*B - 4*A*C
+	if dscr < 0 {
+		return false, nil
+	}
+	x1 := (-B + math.Sqrt(dscr)) / (2 * A)
+	x2 := (-B - math.Sqrt(dscr)) / (2 * A)
+	if x1 < 0 && x2 < 0 {
+		return false, nil
+	} else {
+		var res IntersectionData
+		res.dist = x2
+		if res.dist < 0 {
+			res.dist = x1
+		}
+		res.pos = mymath.VectorsAddition(ray.Start, mymath.VectorFloatMultiply(ray.Dir, res.dist))
+		res.normal = mymath.VectorsSubstraction(res.pos, s.center)
+		res.normal.Normalize()
+		res.u = (math.Pi + math.Atan2(res.pos.Z-s.center.Z, res.pos.X-s.center.X)) / (2 * math.Pi)
+		res.v = 1.0 - (math.Pi/2+math.Asin((res.pos.Y-s.center.Y)/s.radius))/math.Pi
+
+		return true, &res
+	}
+
 }
 
 type Cube struct {
