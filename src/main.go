@@ -3,9 +3,11 @@ package main
 import (
 	"Go-Raytracer/src/raytracer"
 	"Go-Raytracer/src/sdlwrapper"
+	"Go-Raytracer/src/utils"
 	"fmt"
 	"os"
 	"runtime"
+	"time"
 )
 
 const (
@@ -71,11 +73,20 @@ func main() {
 	}
 
 	if saveImage {
+		for render.GetState() == raytracer.RENDERING {
+			time.Sleep(100 * time.Millisecond)
+		}
 		//save the result
-		outputFilepath = outputFilepath
+		image := utils.NewPNG(int(winWidth), int(winHeight), outputFilepath)
+		for i := uint16(0); i < winWidth; i++ {
+			for j := uint16(0); j < winHeight; j++ {
+				image.SetPixelAt(int(i), int(j), render.GetPixel(i, j))
+			}
+		}
+		image.SavePNG()
 	}
 
-	//loop while user close it
+	loop while user close it
 	for !sdlwrapper.CheckForExitEvent() {
 	}
 }
