@@ -26,6 +26,10 @@ func (v *Vector) Lenght() float64 {
 	return math.Sqrt(v.X*v.X + v.Y*v.Y + v.Z*v.Z)
 }
 
+func (v *Vector) LenghtSqr() float64 {
+	return v.X*v.X + v.Y*v.Y + v.Z*v.Z
+}
+
 func (v *Vector) Multiply(multiplier float64) {
 	v.X *= multiplier
 	v.Y *= multiplier
@@ -54,6 +58,12 @@ func VectorsAddition(left, right Vector) Vector {
 //cross product
 func VectorsMultiplication(left, right Vector) Vector {
 	return Vector{left.Y*right.Z - left.Z*right.Y, left.Z*right.X - left.X*right.Z, left.X*right.Y - left.Y*right.X}
+}
+
+func VectorFloatMultiply(vec Vector, multi float64) Vector {
+	res := vec
+	res.Multiply(multi)
+	return res
 }
 
 func VectorsDotProduct(left, right Vector) float64 {

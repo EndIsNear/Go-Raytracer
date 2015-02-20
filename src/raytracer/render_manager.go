@@ -22,6 +22,7 @@ type RenderManager struct {
 	dispBuffer    [][]utils.Color
 	scene         *Scene
 	camera        *Camera
+	ambientLight  utils.Color
 	width, height uint16
 	workersCnt    uint16
 	startTime     time.Time
@@ -47,19 +48,14 @@ func NewRenderManager(width, height, workersCnt uint16) *RenderManager {
 func (rm *RenderManager) InitScene(sceneFileName string) {
 	//hardcoded for now
 	//should be read from file
-	rm.camera = NewCamera(mymath.Vector{0, 150, 0}, 0, -10, 0, 90, float64(rm.width)/float64(rm.height))
+	rm.ambientLight = utils.Color{0.1, 0.1, 0.1}
+	rm.camera = NewCamera(mymath.Vector{0, 150, 0}, 0, -30, 0, 90, float64(rm.width)/float64(rm.height))
 
-	pl := Plane{XZ, mymath.Vector{0, 0, 400}, 200}
-	pl2 := Plane{YZ, mymath.Vector{100, 100, 400}, 200}
-	pl3 := Plane{XY, mymath.Vector{0, 100, 500}, 200}
-
-	ch := Checker{utils.NewColor(0, 122, 122), utils.NewColor(0, 33, 33), 10}
-	ch2 := Checker{utils.NewColor(122, 122, 0), utils.NewColor(33, 33, 0), 20}
-	ch3 := Checker{utils.NewColor(122, 0, 122), utils.NewColor(33, 0, 33), 30}
-
-	rm.scene.AddSceneElement(&pl, &ch)
-	rm.scene.AddSceneElement(&pl2, &ch2)
-	rm.scene.AddSceneElement(&pl3, &ch3)
+	pl := Plane{XZ, mymath.Vector{0, 0, 0}, 5200}
+	ch := Checker{utils.NewColor(15, 0, 15), utils.NewColor(0, 1, 1), 10}
+	sh := Lambert{&ch}
+	rm.scene.AddSceneElement(&pl, &sh)
+	rm.scene.AddLight(utils.Color{1, 1, 1}, 1500000, mymath.Vector{0, 400, 200})
 	rm.state = STOPED
 }
 
@@ -123,7 +119,7 @@ func (rm *RenderManager) raytrace(x, y uint16) {
 	}
 
 	if data.dist < 1e99 {
-		rm.dispBuffer[x][y] = (*resNode.shader).GetColor(&data, &rm.scene.lights)
+		rm.dispBuffer[x][y] = (*resNode.shader).Shade(&data, rm.ambientLight, rm.scene.lights)
 	} else {
 		rm.dispBuffer[x][y] = utils.NewColor(0, 0, 0)
 	}

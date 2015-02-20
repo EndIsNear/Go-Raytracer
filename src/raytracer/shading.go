@@ -5,8 +5,20 @@ import (
 	"Go-Raytracer/src/utils"
 )
 
+type Texture interface {
+	GetColor(*IntersectionData) utils.Color
+}
+
 type Shader interface {
-	GetColor(*IntersectionData, *[]Light) utils.Color
+	Shade(*IntersectionData, utils.Color, []Light) utils.Color
+}
+
+type Color struct {
+	color utils.Color
+}
+
+func (c *Color) GetColor(id *IntersectionData) utils.Color {
+	return c.color
 }
 
 type Checker struct {
@@ -14,8 +26,7 @@ type Checker struct {
 	size          float64
 }
 
-func (c *Checker) GetColor(id *IntersectionData, lights *[]Light) utils.Color {
-	//naive, no lights
+func (c *Checker) GetColor(id *IntersectionData) utils.Color {
 	sq := (mymath.Floor(id.u/c.size) + mymath.Floor(id.v/c.size)) % 2
 	if sq == 0 {
 		return c.first
@@ -25,15 +36,31 @@ func (c *Checker) GetColor(id *IntersectionData, lights *[]Light) utils.Color {
 }
 
 type Lambert struct {
+	text Texture
 }
 
-func (c *Lambert) GetColor(id *IntersectionData) *utils.Color {
-	return nil
+func (c *Lambert) Shade(id *IntersectionData, ambLight utils.Color, lights []Light) utils.Color {
+	res := c.text.GetColor(id)
+
+	for _, light := range lights {
+		ok := true
+		if ok { //TestVis
+			lightDir := mymath.VectorsSubstraction(light.pos, id.pos)
+			mult := lightDir.LenghtSqr()
+			lightDir.Normalize()
+			cosTheta := mymath.VectorsDotProduct(lightDir, id.normal)
+			lightContr := utils.ColorAddition(ambLight, utils.ColorFloatMulti(*lights[0].color, light.power/mult*cosTheta))
+			res = utils.ColorMultiplication(res, lightContr)
+		}
+	}
+
+	return res
 }
 
-type Phong struct {
-}
+// type Phong struct {
+// 	text Texture
+// }
 
-func (c *Phong) GetColor(id *IntersectionData) *utils.Color {
-	return nil
-}
+// func (c *Phong) Shade(id *IntersectionData, ambLight utils.Color, lights []Light) utils.Color {
+// 	return c.text.GetColor(id)
+// }

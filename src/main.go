@@ -67,11 +67,11 @@ func main() {
 		//refreshes display while rendering
 		for !sdlwrapper.CheckForExitEvent() && render.GetState() == raytracer.RENDERING {
 			RefreshDisplay(render, disp)
-			disp.Flip()
 		}
 
 		//update window title with render time
 		disp.SetTitle(windowName + " [render time:" + render.GetRenderTime().String() + "]")
+		RefreshDisplay(render, disp)
 	}
 
 	if saveImage {
