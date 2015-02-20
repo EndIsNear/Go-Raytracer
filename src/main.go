@@ -32,6 +32,7 @@ func main() {
 	if argc <= 1 {
 		fmt.Println(tooFewArg)
 		fmt.Println(help)
+		return
 	}
 
 	for i := 1; i < argc; i++ {
@@ -66,6 +67,7 @@ func main() {
 		//refreshes display while rendering
 		for !sdlwrapper.CheckForExitEvent() && render.GetState() == raytracer.RENDERING {
 			RefreshDisplay(render, disp)
+			disp.Flip()
 		}
 
 		//update window title with render time
@@ -86,7 +88,7 @@ func main() {
 		image.SavePNG()
 	}
 
-	loop while user close it
+	//loop while user close it
 	for !sdlwrapper.CheckForExitEvent() {
 	}
 }

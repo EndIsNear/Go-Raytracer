@@ -50,22 +50,16 @@ func (rm *RenderManager) InitScene(sceneFileName string) {
 	rm.camera = NewCamera(mymath.Vector{0, 150, 0}, 0, -10, 0, 90, float64(rm.width)/float64(rm.height))
 
 	pl := Plane{XZ, mymath.Vector{0, 0, 400}, 200}
-	rm.scene.AddGeometry(&pl, "plane")
 	pl2 := Plane{YZ, mymath.Vector{100, 100, 400}, 200}
-	rm.scene.AddGeometry(&pl2, "plane2")
 	pl3 := Plane{XY, mymath.Vector{0, 100, 500}, 200}
-	rm.scene.AddGeometry(&pl3, "plane3")
 
 	ch := Checker{utils.NewColor(0, 122, 122), utils.NewColor(0, 33, 33), 10}
-	rm.scene.AddShader(&ch, "checker")
 	ch2 := Checker{utils.NewColor(122, 122, 0), utils.NewColor(33, 33, 0), 20}
-	rm.scene.AddShader(&ch2, "checker2")
 	ch3 := Checker{utils.NewColor(122, 0, 122), utils.NewColor(33, 0, 33), 30}
-	rm.scene.AddShader(&ch3, "checker3")
 
-	rm.scene.AddSceneElement("plane", "checker")
-	rm.scene.AddSceneElement("plane2", "checker2")
-	rm.scene.AddSceneElement("plane3", "checker3")
+	rm.scene.AddSceneElement(&pl, &ch)
+	rm.scene.AddSceneElement(&pl2, &ch2)
+	rm.scene.AddSceneElement(&pl3, &ch3)
 	rm.state = STOPED
 }
 

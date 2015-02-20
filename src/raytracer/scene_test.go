@@ -15,9 +15,9 @@ func TestNewScene(t *testing.T) {
 
 func TestAddLight(t *testing.T) {
 	test := NewScene()
-	test.AddLight(utils.NewColor(255, 255, 255), 10000)
-	test.AddLight(utils.NewColor(100, 100, 100), 100)
-	test.AddLight(utils.NewColor(5, 5, 5), 1)
+	test.AddLight(utils.NewColor(255, 255, 255), 10000, mymath.Vector{0, 0, 0})
+	test.AddLight(utils.NewColor(100, 100, 100), 100, mymath.Vector{0, 0, 0})
+	test.AddLight(utils.NewColor(5, 5, 5), 1, mymath.Vector{0, 0, 0})
 
 	r, g, b := test.lights[0].color.ToRGB()
 	if r != 255 || g != 255 || b != 255 || test.lights[0].power != 10000.0 {
@@ -35,60 +35,12 @@ func TestAddLight(t *testing.T) {
 	}
 }
 
-func TestAddGeometry(t *testing.T) {
-	test := NewScene()
-	pl := Plane{XZ, mymath.Vector{1, 0, 0}, 2}
-	test.AddGeometry(&pl, "test")
-	pl = Plane{XY, mymath.Vector{0, 2, 0}, 3}
-	test.AddGeometry(&pl, "test1")
-	pl = Plane{YZ, mymath.Vector{0, 0, 3}, 5}
-	test.AddGeometry(&pl, "test2")
-	if _, ok := test.geometries["test"]; !ok {
-		t.Errorf("AddGeometry failed!")
-	}
-	if _, ok := test.geometries["test1"]; !ok {
-		t.Errorf("AddGeometry failed!")
-	}
-	if _, ok := test.geometries["test2"]; !ok {
-		t.Errorf("AddGeometry failed!")
-	}
-}
-
-func TestAddShader(t *testing.T) {
-	test := NewScene()
-	ch := Checker{utils.NewColor(0, 0, 0), utils.NewColor(0, 0, 0), 20}
-	test.AddShader(&ch, "test")
-	ch = Checker{utils.NewColor(0, 0, 0), utils.NewColor(0, 0, 0), 10}
-	test.AddShader(&ch, "test1")
-	ch = Checker{utils.NewColor(0, 0, 0), utils.NewColor(0, 0, 0), 30}
-	test.AddShader(&ch, "test2")
-	if _, ok := test.shaders["test"]; !ok {
-		t.Errorf("AddShader failed!")
-	}
-	if _, ok := test.shaders["test1"]; !ok {
-		t.Errorf("AddShader failed!")
-	}
-	if _, ok := test.shaders["test2"]; !ok {
-		t.Errorf("AddShader failed!")
-	}
-}
-
 func TestAddSceneElement(t *testing.T) {
 	test := NewScene()
 	pl := Plane{XZ, mymath.Vector{0, 0, 0}, 2}
-	test.AddGeometry(&pl, "geometry")
 	ch := Checker{utils.NewColor(0, 0, 0), utils.NewColor(0, 0, 0), 20}
-	test.AddShader(&ch, "shader")
 
-	if ok := test.AddSceneElement("geometry", "shader"); !ok {
-		t.Errorf("AddSceneElement failed!")
-	}
-
-	if ok := test.AddSceneElement("geometrY", "shader"); ok {
-		t.Errorf("AddSceneElement failed!")
-	}
-
-	if ok := test.AddSceneElement("geometry", "shadeR"); ok {
+	if ok := test.AddSceneElement(&pl, &ch); !ok {
 		t.Errorf("AddSceneElement failed!")
 	}
 }
