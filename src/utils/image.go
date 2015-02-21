@@ -15,6 +15,21 @@ type PNGSaver struct {
 	image               *image.RGBA
 }
 
+func OpenPNG(filepath string) (bool, *image.Image) {
+	file, err := os.Open(filepath) // For read access.
+	if err != nil {
+		fmt.Println(err)
+		return false, nil
+	}
+	res, _, err2 := image.Decode(file)
+	if err2 != nil {
+		fmt.Println(err2)
+		return false, nil
+	}
+
+	return true, &res
+}
+
 func NewPNG(imgWidth, imgHeight int, fileName string) *PNGSaver {
 	var res PNGSaver
 	res.imgHeight = imgHeight

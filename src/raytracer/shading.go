@@ -3,6 +3,7 @@ package raytracer
 import (
 	"Go-Raytracer/src/mymath"
 	"Go-Raytracer/src/utils"
+	"image"
 )
 
 type Texture interface {
@@ -33,6 +34,32 @@ func (c *Checker) GetColor(id *IntersectionData) utils.Color {
 	} else {
 		return c.second
 	}
+}
+
+type TextureImg struct {
+	width, height int
+	img           *image.Image
+}
+
+//for now loads only from png
+func InitTexture(filepath string) (bool, *TextureImg) {
+	var res TextureImg
+	var ok bool
+	ok, res.img = utils.OpenPNG(filepath)
+	if !ok {
+		return false, nil
+	}
+	res.width = (*res.img).Bounds().Dx()
+	res.height = (*res.img).Bounds().Dy()
+	return true, &res
+}
+
+func (t *TextureImg) GetColor(id *IntersectionData) utils.Color {
+	newU := (int(mymath.Floor(id.u)) + t.width*1e3) % t.width
+	newV := (int(mymath.Floor(id.v)) + t.height*1e3) % t.height
+	res := (*t.img).At(newU, newV)
+	r, g, b, _ := res.RGBA()
+	return utils.NewColor(uint8(r), uint8(g), uint8(b))
 }
 
 type Lambert struct {

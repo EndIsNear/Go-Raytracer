@@ -60,11 +60,14 @@ func (rm *RenderManager) InitScene(sceneFileName string) {
 	ch2 := Checker{utils.NewColor(15, 15, 15), utils.NewColor(0, 1, 1), 10}
 	sh2 := Lambert{&ch2}
 
-	rm.scene.AddSceneElement(&pl, &sh)
+	_, text := InitTexture("../Data/metal.png")
+	sh3 := Lambert{text}
+
+	rm.scene.AddSceneElement(&pl, &sh3)
 	rm.scene.AddSceneElement(&sp, &sh)
 	rm.scene.AddSceneElement(&cb, &sh2)
-	rm.scene.AddLight(utils.Color{1, 1, 1}, 750000, mymath.Vector{200, 400, 200})
-	rm.scene.AddLight(utils.Color{1, 1, 1}, 750000, mymath.Vector{-200, 400, 200})
+	rm.scene.AddLight(utils.Color{1, 1, 1}, 330000, mymath.Vector{200, 400, 200})
+	rm.scene.AddLight(utils.Color{1, 1, 1}, 330000, mymath.Vector{-200, 400, 200})
 	rm.state = STOPED
 }
 
