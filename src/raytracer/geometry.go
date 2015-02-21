@@ -117,8 +117,8 @@ func (s *Sphere) Intersect(ray *mymath.Ray, crnDist float64) (bool, *Intersectio
 		res.pos = mymath.VectorsAddition(ray.Start, mymath.VectorFloatMultiply(ray.Dir, res.dist))
 		res.normal = mymath.VectorsSubstraction(res.pos, s.center)
 		res.normal.Normalize()
-		res.u = (math.Pi + math.Atan2(res.pos.Z-s.center.Z, res.pos.X-s.center.X)) / (2 * math.Pi)
-		res.v = 1.0 - (math.Pi/2+math.Asin((res.pos.Y-s.center.Y)/s.radius))/math.Pi
+		res.u = 0 //(math.Pi + math.Atan2(res.pos.Z-s.center.Z, res.pos.X-s.center.X)) / (2 * math.Pi)
+		res.v = 0 //1.0 - (math.Pi/2+math.Asin((res.pos.Y-s.center.Y)/s.radius))/math.Pi
 
 		return true, &res
 	}
@@ -126,8 +126,61 @@ func (s *Sphere) Intersect(ray *mymath.Ray, crnDist float64) (bool, *Intersectio
 }
 
 type Cube struct {
+	center   mymath.Vector
+	sideSize float64
 }
 
 func (c *Cube) Intersect(ray *mymath.Ray, crnDist float64) (bool, *IntersectionData) {
-	return false, nil
+	planeCenter := mymath.Vector{0, 0, c.sideSize / 2}
+	cubeSide := Plane{XY, mymath.VectorsAddition(c.center, planeCenter), c.sideSize}
+	intersect, res := cubeSide.Intersect(ray, crnDist)
+	if intersect && crnDist > res.dist {
+		crnDist = res.dist
+	}
+
+	planeCenter.UnaryMinus()
+	cubeSide.center = mymath.VectorsAddition(c.center, planeCenter)
+	intersectTmp, tmp := cubeSide.Intersect(ray, crnDist)
+	if intersectTmp && crnDist > tmp.dist {
+		crnDist = tmp.dist
+		intersect, res = intersectTmp, tmp
+	}
+
+	planeCenter = mymath.Vector{0, c.sideSize / 2, 0}
+	cubeSide = Plane{XZ, mymath.VectorsAddition(c.center, planeCenter), c.sideSize}
+	intersectTmp, tmp = cubeSide.Intersect(ray, crnDist)
+	if intersectTmp && crnDist > tmp.dist {
+		crnDist = tmp.dist
+		res = tmp
+		intersect = intersectTmp
+	}
+
+	planeCenter.UnaryMinus()
+	cubeSide.center = mymath.VectorsAddition(c.center, planeCenter)
+	intersectTmp, tmp = cubeSide.Intersect(ray, crnDist)
+	if intersectTmp && crnDist > tmp.dist {
+		crnDist = tmp.dist
+		res = tmp
+		intersect = intersectTmp
+	}
+
+	planeCenter = mymath.Vector{c.sideSize / 2, 0, 0}
+	cubeSide = Plane{YZ, mymath.VectorsAddition(c.center, planeCenter), c.sideSize}
+	intersectTmp, tmp = cubeSide.Intersect(ray, crnDist)
+	if intersectTmp && crnDist > tmp.dist {
+		crnDist = tmp.dist
+		res = tmp
+		intersect = intersectTmp
+	}
+
+	planeCenter.UnaryMinus()
+	cubeSide.center = mymath.VectorsAddition(c.center, planeCenter)
+	intersectTmp, tmp = cubeSide.Intersect(ray, crnDist)
+	if intersectTmp && crnDist > tmp.dist {
+		crnDist = tmp.dist
+		res = tmp
+		intersect = intersectTmp
+	}
+
+	return intersect, res
 }
