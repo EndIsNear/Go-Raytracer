@@ -48,7 +48,7 @@ func NewRenderManager(width, height, workersCnt uint16) *RenderManager {
 func (rm *RenderManager) InitScene(sceneFileName string) {
 	//hardcoded for now
 	//should be read from file
-	rm.ambientLight = utils.Color{0.1, 0.1, 0.1}
+	rm.ambientLight = utils.Color{0.5, 0.5, 0.5}
 	rm.camera = NewCamera(mymath.Vector{0, 150, 0}, 0, -30, 0, 90, float64(rm.width)/float64(rm.height))
 
 	pl := Plane{XZ, mymath.Vector{0, 0, 0}, 5200}
@@ -63,7 +63,7 @@ func (rm *RenderManager) InitScene(sceneFileName string) {
 	rm.scene.AddSceneElement(&pl, &sh)
 	rm.scene.AddSceneElement(&sp, &sh)
 	rm.scene.AddSceneElement(&cb, &sh2)
-	rm.scene.AddLight(utils.Color{1, 1, 1}, 1500000, mymath.Vector{-200, 400, 200})
+	rm.scene.AddLight(utils.Color{1, 1, 1}, 1500000, mymath.Vector{0, 400, 200})
 	rm.state = STOPED
 }
 
@@ -127,7 +127,7 @@ func (rm *RenderManager) raytrace(x, y uint16) {
 	}
 
 	if data.dist < 1e99 {
-		rm.dispBuffer[x][y] = (*resNode.shader).Shade(&data, rm.ambientLight, rm.scene.lights)
+		rm.dispBuffer[x][y] = (*resNode.shader).Shade(&data, rm.ambientLight, rm.scene)
 	} else {
 		rm.dispBuffer[x][y] = utils.NewColor(0, 0, 0)
 	}

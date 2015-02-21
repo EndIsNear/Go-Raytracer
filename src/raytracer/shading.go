@@ -10,7 +10,7 @@ type Texture interface {
 }
 
 type Shader interface {
-	Shade(*IntersectionData, utils.Color, []Light) utils.Color
+	Shade(*IntersectionData, utils.Color, *Scene) utils.Color
 }
 
 type Color struct {
@@ -39,19 +39,21 @@ type Lambert struct {
 	text Texture
 }
 
-func (c *Lambert) Shade(id *IntersectionData, ambLight utils.Color, lights []Light) utils.Color {
-	res := c.text.GetColor(id)
+func (c *Lambert) Shade(id *IntersectionData, ambLight utils.Color, scene *Scene) utils.Color {
+	res := utils.ColorMultiplication(c.text.GetColor(id), ambLight)
 
-	for _, light := range lights {
-		ok := true
-		if ok { //TestVis
+	for _, light := range scene.lights {
+
+		nearPnt := mymath.VectorsAddition(id.pos, mymath.VectorFloatMultiply(id.normal, 1e-6))
+		if TestVisibility(light.pos, nearPnt, scene) {
 			lightDir := mymath.VectorsSubstraction(light.pos, id.pos)
 			mult := lightDir.LenghtSqr()
 			lightDir.Normalize()
 			cosTheta := mymath.VectorsDotProduct(lightDir, id.normal)
-			lightContr := utils.ColorAddition(ambLight, utils.ColorFloatMulti(*lights[0].color, light.power/mult*cosTheta))
+			lightContr := utils.ColorAddition(ambLight, utils.ColorFloatMulti(*(light.color), light.power/mult*cosTheta))
 			res = utils.ColorMultiplication(res, lightContr)
 		}
+
 	}
 
 	return res

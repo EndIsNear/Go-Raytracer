@@ -2,6 +2,7 @@ package raytracer
 
 import (
 	"Go-Raytracer/src/mymath"
+	"fmt"
 	"math"
 )
 
@@ -24,6 +25,22 @@ type Plane struct {
 	orientation uint8
 	center      mymath.Vector
 	limit       float64
+}
+
+func TestVisibility(start, end mymath.Vector, scene *Scene) bool {
+	rayDir := mymath.VectorsSubstraction(end, start)
+	crnDist := rayDir.Lenght()
+	rayDir.Normalize()
+	ray := mymath.Ray{start, rayDir}
+
+	var ok bool
+	for _, val := range scene.elements {
+		if ok, _ = (*val.geometry).Intersect(&ray, crnDist); ok {
+			return false
+			fmt.Println("shadowwww")
+		}
+	}
+	return true
 }
 
 func (p *Plane) Intersect(ray *mymath.Ray, crnDist float64) (bool, *IntersectionData) {
