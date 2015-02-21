@@ -1,8 +1,8 @@
 package sdlwrapper
 
 import (
-	"Go-Raytracer/src/utils"
 	"errors"
+	"github.com/EndIsNear/Go-Raytracer/src/utils"
 	"github.com/veandco/go-sdl2/sdl"
 )
 
