@@ -2,7 +2,6 @@ package raytracer
 
 import (
 	"Go-Raytracer/src/mymath"
-	"fmt"
 	"math"
 )
 
@@ -37,7 +36,6 @@ func TestVisibility(start, end mymath.Vector, scene *Scene) bool {
 	for _, val := range scene.elements {
 		if ok, _ = (*val.geometry).Intersect(&ray, crnDist); ok {
 			return false
-			fmt.Println("shadowwww")
 		}
 	}
 	return true
@@ -100,6 +98,10 @@ func (p *Plane) Intersect(ray *mymath.Ray, crnDist float64) (bool, *Intersection
 			result.normal = mymath.Vector{1, 0, 0}
 		}
 
+		//adjust the normal
+		if mymath.VectorsDotProduct(ray.Dir, result.normal) > 0 {
+			result.normal.UnaryMinus()
+		}
 		return true, &result
 	}
 }
