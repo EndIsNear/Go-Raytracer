@@ -52,10 +52,10 @@ func (rm *RenderManager) InitScene(sceneFileName string) {
 	rm.camera = NewCamera(mymath.Vector{0, 150, 0}, 0, -30, 0, 90, float64(rm.width)/float64(rm.height))
 
 	pl := Plane{XZ, mymath.Vector{0, 0, 0}, 5200}
-	sp := Sphere{mymath.Vector{-100, 0, 200}, 50}
+	sp := Sphere{mymath.Vector{-100, 40, 200}, 50}
 	cb := Cube{mymath.Vector{100, 50, 200}, 50}
 
-	ch := Checker{utils.NewColor(15, 0, 15), utils.NewColor(0, 21, 21), 10}
+	ch := Checker{utils.NewColor(0, 0, 255), utils.NewColor(0, 21, 21), 10}
 	sh := Lambert{&ch}
 	ch2 := Checker{utils.NewColor(15, 15, 15), utils.NewColor(0, 1, 1), 10}
 	sh2 := Lambert{&ch2}

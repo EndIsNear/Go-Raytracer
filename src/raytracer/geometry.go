@@ -126,9 +126,13 @@ func (s *Sphere) Intersect(ray *mymath.Ray, crnDist float64) (bool, *Intersectio
 		return false, nil
 	} else {
 		var res IntersectionData
-		res.dist = x2
-		if res.dist < 0 {
+		if x2 < 0 || (x1 >= 0 && x1 < x2) {
 			res.dist = x1
+		} else {
+			res.dist = x2
+		}
+		if res.dist > crnDist {
+			return false, nil
 		}
 		res.pos = mymath.VectorsAddition(ray.Start, mymath.VectorFloatMultiply(ray.Dir, res.dist))
 		res.normal = mymath.VectorsSubstraction(res.pos, s.center)
