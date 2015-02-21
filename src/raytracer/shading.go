@@ -43,8 +43,7 @@ func (c *Lambert) Shade(id *IntersectionData, ambLight utils.Color, scene *Scene
 	res := utils.ColorMultiplication(c.text.GetColor(id), ambLight)
 
 	for _, light := range scene.lights {
-
-		nearPnt := mymath.VectorsAddition(id.pos, mymath.VectorFloatMultiply(id.normal, 1e-6))
+		nearPnt := mymath.VectorsAddition(id.pos, mymath.VectorFloatMultiply(id.normal, 1e-5))
 		if TestVisibility(light.pos, nearPnt, scene) {
 			lightDir := mymath.VectorsSubstraction(light.pos, id.pos)
 			mult := lightDir.LenghtSqr()

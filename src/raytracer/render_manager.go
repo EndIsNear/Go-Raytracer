@@ -63,7 +63,8 @@ func (rm *RenderManager) InitScene(sceneFileName string) {
 	rm.scene.AddSceneElement(&pl, &sh)
 	rm.scene.AddSceneElement(&sp, &sh)
 	rm.scene.AddSceneElement(&cb, &sh2)
-	rm.scene.AddLight(utils.Color{1, 1, 1}, 1500000, mymath.Vector{0, 400, 200})
+	rm.scene.AddLight(utils.Color{1, 1, 1}, 750000, mymath.Vector{200, 400, 200})
+	rm.scene.AddLight(utils.Color{1, 1, 1}, 750000, mymath.Vector{-200, 400, 200})
 	rm.state = STOPED
 }
 
