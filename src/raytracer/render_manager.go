@@ -116,7 +116,7 @@ func (rm *RenderManager) raytrace(x, y uint16) {
 		data    IntersectionData
 		tmp     *IntersectionData
 		ok      bool
-		resNode *SceneElement
+		resNode SceneElement
 	)
 
 	data.dist = 1e99

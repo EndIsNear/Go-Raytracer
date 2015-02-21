@@ -17,14 +17,14 @@ type Light struct {
 }
 
 type Scene struct {
-	elements []*SceneElement
+	elements []SceneElement
 	lights   []Light
 	//background color
 }
 
 func NewScene() *Scene {
 	var tmp Scene
-	tmp.elements = make([]*SceneElement, 0)
+	tmp.elements = make([]SceneElement, 0)
 	tmp.lights = make([]Light, 0)
 	return &tmp
 }
@@ -35,7 +35,7 @@ func (s *Scene) AddLight(lightCol utils.Color, lightPower float64, lightPos myma
 
 func (s *Scene) AddSceneElement(geometry Geometry, shader Shader) bool {
 	sceneElem := SceneElement{&geometry, &shader}
-	s.elements = append(s.elements, &sceneElem)
+	s.elements = append(s.elements, sceneElem)
 
 	return true
 }
