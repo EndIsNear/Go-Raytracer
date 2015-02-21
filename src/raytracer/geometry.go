@@ -93,9 +93,6 @@ type Sphere struct {
 }
 
 func (s *Sphere) Intersect(ray *mymath.Ray, crnDist float64) (bool, *IntersectionData) {
-	// x1 = (-B + sqrt(Dscr)) / (2*A);
-	// x2 = (-B - sqrt(Dscr)) / (2*A);
-	// double sol = x2; // get the closer of the two solutions...
 	H := mymath.VectorsSubstraction(ray.Start, s.center)
 	A := ray.Dir.LenghtSqr()
 	B := 2 * mymath.VectorsDotProduct(H, ray.Dir)
