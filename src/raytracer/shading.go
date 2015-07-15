@@ -1,8 +1,8 @@
 package raytracer
 
 import (
-	"Go-Raytracer/src/mymath"
-	"Go-Raytracer/src/utils"
+	"github.com/EndIsNear/Go-Raytracer/src/mymath"
+	"github.com/EndIsNear/Go-Raytracer/src/utils"
 	"image"
 )
 
@@ -78,6 +78,8 @@ func (c *Lambert) Shade(id *IntersectionData, ambLight utils.Color, scene *Scene
 			cosTheta := mymath.VectorsDotProduct(lightDir, id.normal)
 			lightContr := utils.ColorAddition(ambLight, utils.ColorFloatMulti(*(light.color), light.power/mult*cosTheta))
 			res = utils.ColorMultiplication(res, lightContr)
+		} else {
+			res = utils.ColorMultiplication(res, utils.Color{0.5, 0.5, 0.5})
 		}
 
 	}

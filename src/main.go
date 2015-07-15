@@ -1,10 +1,10 @@
 package main
 
 import (
-	"Go-Raytracer/src/raytracer"
-	"Go-Raytracer/src/sdlwrapper"
-	"Go-Raytracer/src/utils"
 	"fmt"
+	"github.com/EndIsNear/Go-Raytracer/src/raytracer"
+	"github.com/EndIsNear/Go-Raytracer/src/sdlwrapper"
+	"github.com/EndIsNear/Go-Raytracer/src/utils"
 	"os"
 	"runtime"
 	"time"
