@@ -1,7 +1,7 @@
 package raytracer
 
 import (
-	"Go-Raytracer/src/mymath"
+	"github.com/EndIsNear/Go-Raytracer/src/mymath"
 	"math"
 )
 
